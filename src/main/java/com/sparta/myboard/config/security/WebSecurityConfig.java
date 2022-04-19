@@ -1,80 +1,56 @@
 package com.sparta.myboard.config.security;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+@RequiredArgsConstructor
+@Slf4j
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final CorsFilter corsFilter;
 
     @Bean
-    public BCryptPasswordEncoder encodePassword() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder(){
+        //createDelegatingPasswordEncoder() 내부를 보면 결국 BCryptPasswordEncoder를 받게된다.
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Override
-    public void configure(WebSecurity web) {
-// h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
+    public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/h2-console/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-// 회원 관리 처리 API (POST /user/**) 에 대해 CSRF 무시
-        http.csrf().ignoringAntMatchers("/api/**");
 
+        http.cors()
+                .and()
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        // 와일드카드 사용법 (ant style)
+        // https://developpaper.com/spring-security-ant-style-in-path-uri/
         http.authorizeRequests()
-// image 폴더를 login 없이 허용
-                .antMatchers("/images/**").permitAll()
-// css 폴더를 login 없이 허용
-                .antMatchers("/css/**").permitAll()
-// 회원 관리 처리 API 전부를 login 없이 허용
-                .antMatchers("/api/**").permitAll()
-// 그 외 어떤 요청이든 '인증'
-                .anyRequest().authenticated().and()
-// 로그인 기능
-                .formLogin()
-//                .loginPage("/user/login")
-                .defaultSuccessUrl("/asd").failureUrl("/user/login?error").permitAll().and()
-// 로그아웃 기능
-                .logout().permitAll();
-
-
+                .antMatchers("/api/user/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/post/*").permitAll()
+                .anyRequest().authenticated();
 
     }
-
-//    //----------------------------------
-//    // FailureHandler
-//    //----------------------------------
-//    @Override
-//    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-//
-//    }
-//
-//
-//    //----------------------------------
-//    // SuccessHandler
-//    //----------------------------------
-//    @Override
-//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//        RequestUserLoginDto loginDto = new RequestUserLoginDto();
-//        Principal userPrincipal = request.getUserPrincipal();
-//        userPrincipal.
-//    }
-
-//    @Override
-//    public void onAuthenticationSuccess(HttpServletRequest request,
-//                                        HttpServletResponse response,
-//                                        Authentication authentication) throws IOException {
-//        MyResult result = new MyResult("認証成功"); // JSONにするオブジェクト
-//        HttpOutputMessage outputMessage = new ServletServerHttpResponse(response);
-//        httpMessageConverter.write(result, CONTENT_TYPE_JSON, outputMessage); // Responseに書き込む
-//        response.setStatus(HttpStatus.OK.value()); // 200 OK.
-//    }
-
 }
