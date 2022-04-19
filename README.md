@@ -41,8 +41,12 @@
        - 좋아요 순
        - view 순
 
+## ERD
+
+![img.png](image/erd.png)
+
+
 ## API 리스트
 
 ![img.png](image/API_list.png)
-
 
