@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserRegisterRequestDto {
+public class UserInfoResponseDto {
 
     private String username;
-    private String password;
-    private String passwordCheck;
     private String nickname;
 }
