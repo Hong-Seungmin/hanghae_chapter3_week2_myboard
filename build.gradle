@@ -35,6 +35,9 @@ dependencies {
 
     // 스프링 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // 쿼리 로그
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 }
 
 tasks.named('test') {
