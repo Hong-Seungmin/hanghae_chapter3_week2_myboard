@@ -44,7 +44,7 @@ public class LikesService {
 
     private User getUser(String username) {
         return userRepository.findOneByUsername(username)
-                             .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "존재하지 않는 아이디 입니다."));
+                             .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "인증되지 않은 아이디로 시도하였습니다."));
 
     }
 

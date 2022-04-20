@@ -29,9 +29,15 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseMessage> register(@RequestBody @Valid UserRegisterRequestDto userRegisterRequestDto) {
+    public ResponseEntity<ResponseMessage> register(@RequestBody @Valid UserRegisterRequestDto userRegisterRequestDto,
+            HttpServletRequest request) {
 
         //TODO 회원가입
+
+        String jwt = JwtTokenProvider.getJwtFromRequest(request);
+        if (JwtTokenProvider.validateToken(jwt)) {
+            return new ResponseEntity<>(new ResponseMessage(false, "이미 로그인 중.."), HttpStatus.BAD_REQUEST);
+        }
 
         String username = userRegisterRequestDto.getUsername();
         String nickname = userRegisterRequestDto.getNickname();
@@ -54,15 +60,21 @@ public class UserController {
     public ResponseEntity<ResponseMessage> isDuplicate(@PathVariable String username) {
 
         //TODO 중복 아이디 검색
-        userService.isDuplicationUsername(username);
+        userService.isDuplicationUsername(username.trim());
 
-        return new ResponseEntity<>(new ResponseMessage(true, "가능한 아이디"), HttpStatus.OK);    }
+        return new ResponseEntity<>(new ResponseMessage(true, "가능한 아이디"), HttpStatus.OK);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseMessage> login(@RequestBody @Valid UserLoginRequestDto userLoginRequestDto,
-            HttpServletResponse response) {
+            HttpServletResponse response, HttpServletRequest request) {
 
         //TODO 로그인
+
+        String jwt = JwtTokenProvider.getJwtFromRequest(request);
+        if (JwtTokenProvider.validateToken(jwt)) {
+            return new ResponseEntity<>(new ResponseMessage(false, "이미 로그인 중.."), HttpStatus.BAD_REQUEST);
+        }
 
         String username = userLoginRequestDto.getUsername();
         String password = userLoginRequestDto.getPassword();
@@ -70,7 +82,7 @@ public class UserController {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userLoginRequestDto.getUsername(),
                                                                                 null);
-        String jwt = JwtTokenProvider.generateToken(authentication);
+        jwt = JwtTokenProvider.generateToken(authentication);
         response.setHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME, jwt);
 
         return new ResponseEntity<>(new ResponseMessage(true, "로그인 성공"), HttpStatus.OK);
@@ -86,7 +98,8 @@ public class UserController {
         // jwt를 이용한 로그아웃은 토근을 따로 저장해두었다가 삭제하는 식으로 구현해야한다.
         // 저장소에 토큰이있다면 로그인 중, 토큰이 없다면 로그아웃 상태라고 보면된다.
 
-        return new ResponseEntity<>(new ResponseMessage(true, "로그아웃 성공"), HttpStatus.OK);    }
+        return new ResponseEntity<>(new ResponseMessage(true, "로그아웃 성공"), HttpStatus.OK);
+    }
 
     @GetMapping("/info")
     public ResponseEntity<UserInfoResponseDto> info(@RequestParam(value = "username") String username) {

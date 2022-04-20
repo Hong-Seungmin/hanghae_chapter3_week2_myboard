@@ -31,9 +31,9 @@ public class PostService {
     private final UserRepository userRepository;
     private final LikesRepository likesRepository;
 
-    public List<PostResponseDto> getAllPost(Long page, String username) {
+    public List<PostResponseDto> getAllPost(int page, String username) {
 
-        Pageable pageRequest = PageRequest.of(Math.toIntExact(page), 20, Sort.by("createdAt").descending());
+        Pageable pageRequest = PageRequest.of(page, 10, Sort.by("createdAt").descending());
         Page<Post> posts = postRepository.findAll(pageRequest);
 
         List<PostResponseDto> responseDtos = new ArrayList<>();

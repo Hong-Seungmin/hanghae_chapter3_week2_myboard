@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
@@ -26,12 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        //createDelegatingPasswordEncoder() 내부를 보면 결국 BCryptPasswordEncoder를 받게된다.
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/h2-console/**");
@@ -43,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and()
             .csrf().disable()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .httpBasic().disable()
             .formLogin().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -52,8 +48,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // https://developpaper.com/spring-security-ant-style-in-path-uri/
         http.authorizeRequests()
             .antMatchers("/api/user/**").permitAll()
-            .antMatchers(HttpMethod.GET, "/api/post/*").permitAll()
-            .anyRequest().authenticated();
+            .antMatchers(HttpMethod.GET, "/api/post/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
+            .and()
+            .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
 
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        //createDelegatingPasswordEncoder() 내부를 보면 결국 BCryptPasswordEncoder를 받게된다.
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new MyAccessDeniedHandler();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new MyAuthenticationEntryPoint();
+    }
+
 }

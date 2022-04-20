@@ -16,7 +16,7 @@ public class JwtTokenProvider {
     private static final String JWT_SECRET = "secretKey";
 
     // Jwt 토큰 유효시간
-    private static final long JWT_EXPIRATION_MS = 60 * 60 * 1000L;
+    private static final long JWT_EXPIRATION_MS = 1 * 60 * 1000L;
 
 
     // jwt 토큰 생성

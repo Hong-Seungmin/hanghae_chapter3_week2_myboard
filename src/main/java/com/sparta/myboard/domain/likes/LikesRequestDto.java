@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
@@ -13,6 +13,6 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class LikesRequestDto {
 
-    @NotBlank(message = "postId를 넣어주세요.")
+    @NotNull(message = "postId를 넣어주세요.")
     private Long postId;
 }

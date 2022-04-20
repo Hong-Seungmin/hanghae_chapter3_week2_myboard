@@ -22,7 +22,7 @@ public class LikesController {
 
     private final LikesService likesService;
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<ResponseMessage> like(@RequestBody @Valid LikesRequestDto likesRequestDto,
             HttpServletRequest request) {
 
@@ -33,7 +33,7 @@ public class LikesController {
         return new ResponseEntity<>(new ResponseMessage(true, msg), HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<ResponseMessage> disLike(@RequestBody @Valid LikesRequestDto likesRequestDto,
             HttpServletRequest request) {
 

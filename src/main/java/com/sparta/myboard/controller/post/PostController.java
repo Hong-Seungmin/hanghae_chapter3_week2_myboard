@@ -24,9 +24,9 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<PostResponseDto>> getAllPost(
-            @RequestParam(value = "page", required = false, defaultValue = "0") Long page,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             HttpServletRequest request) {
 
         //TODO 모든포스트 조회 (페이징)
@@ -50,7 +50,7 @@ public class PostController {
         return new ResponseEntity<>(onePost, HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<ResponseMessage> savePost(@RequestBody @Valid PostRequsetDto postRequsetDto,
             HttpServletRequest request) {
 

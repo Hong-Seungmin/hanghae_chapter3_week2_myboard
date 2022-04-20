@@ -44,7 +44,7 @@ public class UserService {
 
     public void isDuplicationUsername(String username) {
 
-        if (userRepository.existsByUsername(username)) {
+        if (userRepository.existsByUsername(username) || username == null || username.isEmpty()) {
             throw new ResponseException(HttpStatus.CONFLICT, "가입할 수 없는 아이디입니다.");
         }
     }
