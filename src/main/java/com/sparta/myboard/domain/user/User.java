@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +31,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String nickname;
+
+    @Column
+    private LocalDateTime loginTime;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> postList = new ArrayList<>();
@@ -54,29 +58,36 @@ public class User implements UserDetails {
         this.nickname = nickname;
     }
 
-    public void addPost(PostDto postDto) {
+    public Post addPost(PostDto postDto) {
         Post post = new Post(postDto);
         postList.add(post);
+        post.setUser(this);
+
+        return post;
     }
 
-    public void removePost(PostDto postDto) {
+    public Post removePost(PostDto postDto) {
         Post post = new Post(postDto);
         postList.remove(post);
+        post.setUser(null);
+
+        return post;
     }
 
-    public void addLike(LikesDto likesDto) {
+    public Likes addLike(LikesDto likesDto) {
         Likes likes = new Likes(likesDto);
         likeList.add(likes);
+        likes.setUser(this);
+
+        return likes;
     }
 
-    public void removeLike(LikesDto likesDto) {
+    public Likes removeLike(LikesDto likesDto) {
         Likes likes = new Likes(likesDto);
         likeList.remove(likes);
+        likes.setUser(null);
 
-//        int i = likeList.indexOf(likes);
-//        Likes targetLike = likeList.get(i);
-//        targetLike.setUser(null);
-//        likeList.remove(i);
+        return likes;
     }
 
     public void addRole(String role) {
@@ -95,6 +106,10 @@ public class User implements UserDetails {
         return roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
+    }
+
+    public void updateLoginTime(){
+        loginTime = LocalDateTime.now();
     }
 
     @Override

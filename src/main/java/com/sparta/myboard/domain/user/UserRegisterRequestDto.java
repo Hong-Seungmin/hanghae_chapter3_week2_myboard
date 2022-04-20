@@ -1,10 +1,14 @@
 package com.sparta.myboard.domain.user;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class UserRegisterRequestDto {
 
     private String username;
