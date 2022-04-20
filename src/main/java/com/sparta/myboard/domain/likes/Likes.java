@@ -2,7 +2,7 @@ package com.sparta.myboard.domain.likes;
 
 import com.sparta.myboard.domain.post.Post;
 import com.sparta.myboard.domain.user.User;
-import com.sparta.myboard.domain.util.Timestamped;
+import com.sparta.myboard.util.Timestamped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,4 +43,7 @@ public class Likes extends Timestamped {
         this.post = likesDto.getPost();
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

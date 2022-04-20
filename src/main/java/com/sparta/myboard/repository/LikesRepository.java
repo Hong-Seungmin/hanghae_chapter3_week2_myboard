@@ -8,9 +8,12 @@ import java.util.Optional;
 
 public interface LikesRepository extends JpaRepository<Likes, Long> {
 
-    List<Likes> findAllByUser_UsernameAndPost(String username);
+    List<Likes> findAllByUser_Username(String username);
 
-    Optional<Likes> findOneByUser_UsernameAndPost_PostId(String username, Long postId);
+    Optional<Likes> findOneByUser_UsernameAndPost_Id(String username, Long postId);
 
-    boolean existsByUser_UsernameAndPost_PostId(String username, Long postId);
+    boolean existsOneByUser_UsernameAndPost_Id(String username, Long postId);
+
+    void deleteOneByUser_UsernameAndPost_Id(String username, Long postId);
+
 }
