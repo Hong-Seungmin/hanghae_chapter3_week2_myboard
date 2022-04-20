@@ -3,7 +3,7 @@ package com.sparta.myboard.domain.post;
 import com.sparta.myboard.domain.likes.Likes;
 import com.sparta.myboard.domain.likes.LikesDto;
 import com.sparta.myboard.domain.user.User;
-import com.sparta.myboard.domain.util.Timestamped;
+import com.sparta.myboard.util.Timestamped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
@@ -25,7 +25,7 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    @Column(nullable = false)
+    @Column
     private String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -71,5 +71,9 @@ public class Post extends Timestamped {
     public void removeLike(LikesDto likesDto) {
         Likes likes = new Likes(likesDto);
         likeList.remove(likes);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

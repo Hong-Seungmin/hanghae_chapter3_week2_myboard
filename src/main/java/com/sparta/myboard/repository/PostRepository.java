@@ -11,7 +11,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAll(Pageable pageable);
 
-    Optional<Post> findOneByPostId(Long postId);
+    Optional<Post> findOneById(Long postId);
 
-    Long deleteOneByPostId(Long postId);
+    void deleteOneById(Long postId);
 }
