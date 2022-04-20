@@ -1,6 +1,7 @@
 package com.sparta.myboard.service.user;
 
 import com.sparta.myboard.domain.user.User;
+import com.sparta.myboard.domain.user.UserInfoResponseDto;
 import com.sparta.myboard.exception.ResponseException;
 import com.sparta.myboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,12 @@ public class UserService {
         if (userRepository.existsByUsername(username)) {
             throw new ResponseException(HttpStatus.CONFLICT, "가입할 수 없는 아이디입니다.");
         }
+    }
+
+    public UserInfoResponseDto getUserInfo(String username){
+        User user = userRepository.findOneByUsername(username)
+                                  .orElseThrow(()-> new ResponseException(HttpStatus.BAD_REQUEST, "사용자 정보를 찾을 수 없습니다."));
+
+        return new UserInfoResponseDto(user.getUsername(), user.getNickname());
     }
 }

@@ -2,6 +2,7 @@ package com.sparta.myboard.controller.user;
 
 import com.sparta.myboard.config.security.jwt.JwtTokenProvider;
 import com.sparta.myboard.domain.common.ResponseMessage;
+import com.sparta.myboard.domain.user.UserInfoResponseDto;
 import com.sparta.myboard.domain.user.UserLoginRequestDto;
 import com.sparta.myboard.domain.user.UserRegisterRequestDto;
 import com.sparta.myboard.exception.ResponseException;
@@ -87,11 +88,13 @@ public class UserController {
 
         return new ResponseEntity<>(new ResponseMessage(true, "로그아웃 성공"), HttpStatus.OK);    }
 
-    @PostMapping("/info")
-    public ResponseEntity<ResponseMessage> info() {
+    @GetMapping("/info")
+    public ResponseEntity<UserInfoResponseDto> info(@RequestParam(value = "username") String username) {
 
         //TODO 회원 정보 조회
 
-        return null;
+        UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(username);
+
+        return new ResponseEntity<>(userInfoResponseDto, HttpStatus.OK);
     }
 }
