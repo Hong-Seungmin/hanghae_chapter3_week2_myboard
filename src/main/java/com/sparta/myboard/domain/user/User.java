@@ -1,7 +1,6 @@
 package com.sparta.myboard.domain.user;
 
 import com.sparta.myboard.domain.likes.Likes;
-import com.sparta.myboard.domain.likes.LikesDto;
 import com.sparta.myboard.domain.post.Post;
 import com.sparta.myboard.domain.post.PostDto;
 import lombok.Getter;
@@ -74,20 +73,13 @@ public class User implements UserDetails {
         return post;
     }
 
-    public Likes addLike(LikesDto likesDto) {
-        Likes likes = new Likes(likesDto);
+    public void addLike(Likes likes) {
         likeList.add(likes);
-        likes.setUser(this);
 
-        return likes;
     }
 
-    public Likes removeLike(LikesDto likesDto) {
-        Likes likes = new Likes(likesDto);
+    public void removeLike(Likes likes) {
         likeList.remove(likes);
-        likes.setUser(null);
-
-        return likes;
     }
 
     public void addRole(String role) {

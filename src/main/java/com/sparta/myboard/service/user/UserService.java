@@ -19,9 +19,7 @@ public class UserService {
     @Transactional
     public void registerUser(String username, String nickname, String password) {
 
-        if (userRepository.existsByUsername(username)) {
-            throw new ResponseException(HttpStatus.CONFLICT, "가입할 수 없는 아이디입니다.");
-        }
+        isDuplicationUsername(username);
 
         User newUser = new User(username, passwordEncoder.encode(password), nickname);
         userRepository.save(newUser);

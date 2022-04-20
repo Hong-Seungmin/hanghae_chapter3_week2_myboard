@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/user/")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
@@ -31,7 +31,6 @@ public class UserController {
     public ResponseEntity<ResponseMessage> register(@RequestBody @Valid UserRegisterRequestDto userRegisterRequestDto) {
 
         //TODO 회원가입
-        log.info("userRegisterRequestDto = " + userRegisterRequestDto);
 
         String username = userRegisterRequestDto.getUsername();
         String nickname = userRegisterRequestDto.getNickname();
@@ -63,7 +62,6 @@ public class UserController {
             HttpServletResponse response) {
 
         //TODO 로그인
-        log.info("userLoginRequestDto = " + userLoginRequestDto);
 
         String username = userLoginRequestDto.getUsername();
         String password = userLoginRequestDto.getPassword();

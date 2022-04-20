@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/post/")
+@RequestMapping("/api/post")
 @RequiredArgsConstructor
 @Slf4j
 public class PostController {
@@ -31,7 +31,8 @@ public class PostController {
 
         //TODO 모든포스트 조회 (페이징)
 
-        String username = getUsernameFromRequest(request);
+        String username = JwtTokenProvider.getUsernameFromRequest(request);
+
         List<PostResponseDto> allPost = postService.getAllPost(page, username);
 
         return new ResponseEntity<>(allPost, HttpStatus.OK);
@@ -43,7 +44,7 @@ public class PostController {
 
         //TODO 포스트 상세보기 ( 1개 조회 )
 
-        String username = getUsernameFromRequest(request);
+        String username = JwtTokenProvider.getUsernameFromRequest(request);
         PostResponseDto onePost = postService.getOnePost(postId, username);
 
         return new ResponseEntity<>(onePost, HttpStatus.OK);
@@ -55,7 +56,7 @@ public class PostController {
 
         //TODO 포스트 등록
 
-        String username = getUsernameFromRequest(request);
+        String username = JwtTokenProvider.getUsernameFromRequest(request);
         if (username == null) {
             throw new ResponseException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
         }
@@ -70,7 +71,10 @@ public class PostController {
 
         //TODO 포스트 수정
 
-        String username = getUsernameFromRequest(request);
+        String username = JwtTokenProvider.getUsernameFromRequest(request);
+        if (username == null) {
+            throw new ResponseException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
+        }
 
         postService.updatePost(postRequsetDto, postId, username);
 
@@ -82,21 +86,13 @@ public class PostController {
 
         //TODO 포스트 삭제
 
-        String username = getUsernameFromRequest(request);
+        String username = JwtTokenProvider.getUsernameFromRequest(request);
+        if (username == null) {
+            throw new ResponseException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
+        }
 
         postService.deletePost(postId, username);
 
         return new ResponseEntity<>(new ResponseMessage(true, "포스트 삭제 성공"), HttpStatus.OK);
-    }
-
-    /**
-     * 토큰이 정상적으로 있다면 username, 없다면 null 반환
-     */
-    private String getUsernameFromRequest(HttpServletRequest request) {
-        String jwt = JwtTokenProvider.getJwtFromRequest(request);
-        if (jwt == null) {
-            return null;
-        }
-        return JwtTokenProvider.getUsernameFromJWT(jwt);
     }
 }

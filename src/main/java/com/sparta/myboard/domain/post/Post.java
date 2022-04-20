@@ -1,7 +1,6 @@
 package com.sparta.myboard.domain.post;
 
 import com.sparta.myboard.domain.likes.Likes;
-import com.sparta.myboard.domain.likes.LikesDto;
 import com.sparta.myboard.domain.user.User;
 import com.sparta.myboard.util.Timestamped;
 import lombok.Getter;
@@ -63,13 +62,11 @@ public class Post extends Timestamped {
         this.imagePath = imagePath;
     }
 
-    public void addLike(LikesDto likesDto) {
-        Likes likes = new Likes(likesDto);
+    public void addLike(Likes likes) {
         likeList.add(likes);
     }
 
-    public void removeLike(LikesDto likesDto) {
-        Likes likes = new Likes(likesDto);
+    public void removeLike(Likes likes) {
         likeList.remove(likes);
     }
 

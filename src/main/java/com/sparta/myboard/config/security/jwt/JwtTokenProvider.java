@@ -19,7 +19,6 @@ public class JwtTokenProvider {
     private static final long JWT_EXPIRATION_MS = 60 * 60 * 1000L;
 
 
-
     // jwt 토큰 생성
     public static String generateToken(Authentication authentication) {
 
@@ -36,6 +35,8 @@ public class JwtTokenProvider {
 
     // Jwt 토큰에서 아이디 추출
     public static String getUsernameFromJWT(String token) {
+        validateToken(token);
+
         Claims claims = Jwts.parser()
                             .setSigningKey(JWT_SECRET)
                             .parseClaimsJws(token)
@@ -46,18 +47,30 @@ public class JwtTokenProvider {
 
     // Jwt 토큰 유효성 검사
     public static boolean validateToken(String token) {
+        String msg = "";
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
+            msg = "Invalid JWT token";
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
+            msg = "Expired JWT token";
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
+            msg = "Unsupported JWT token";
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
+            msg = "JWT claims string is empty.";
+        } catch (SignatureException exception) {
+            log.error("JWT validity cannot be asserted and should not be trusted.");
+            msg = "JWT validity cannot be asserted and should not be trusted.";
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            msg = "JWT error";
         }
+
         return false;
     }
 
@@ -67,5 +80,16 @@ public class JwtTokenProvider {
             return bearerToken.substring("Bearer ".length());
         }
         return null;
+    }
+
+    /**
+     * 토큰이 정상적으로 있다면 username, 없다면 ResponseException("로그인 필요");
+     */
+    public static String getUsernameFromRequest(HttpServletRequest request) {
+        String jwt = JwtTokenProvider.getJwtFromRequest(request);
+        if (jwt == null) {
+            return null;
+        }
+        return JwtTokenProvider.getUsernameFromJWT(jwt);
     }
 }

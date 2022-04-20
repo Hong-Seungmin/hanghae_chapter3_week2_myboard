@@ -40,7 +40,7 @@ public class PostService {
         posts.forEach((post) -> {
             boolean liked = false;
             if (username != null) {
-                liked = likesRepository.existsByUser_UsernameAndPost_Id(username, post.getId());
+                liked = likesRepository.existsOneByUser_UsernameAndPost_Id(username, post.getId());
             }
             PostResponseDto responseDto = new PostResponseDto(post, liked);
             responseDtos.add(responseDto);
@@ -55,7 +55,7 @@ public class PostService {
         );
         boolean liked = false;
         if (username != null) {
-            liked = likesRepository.existsByUser_UsernameAndPost_Id(username, postId);
+            liked = likesRepository.existsOneByUser_UsernameAndPost_Id(username, postId);
         }
 
         return new PostResponseDto(post, liked);
@@ -96,18 +96,15 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long postId, String username) {
-        log.info("delete postId = " + postId);
         Post post = postRepository.findOneById(postId)
                                   .orElseThrow(
                                           () -> new ResponseException(HttpStatus.UNAUTHORIZED, "접근할 수 없는 포스트입니다."));
 
         String writerUsername = post.getUser().getUsername();
-        log.info("delete writerUsername = " + writerUsername);
         if (writerUsername.equals(username)) {
             postRepository.deleteOneById(postId);
         }else{
             throw new ResponseException(HttpStatus.UNAUTHORIZED, "삭제할 수 없는 포스트입니다.");
         }
-        log.info("delete writerUsername = " + writerUsername);
     }
 }
