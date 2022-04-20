@@ -1,5 +1,7 @@
 package com.sparta.myboard.config.security;
 
+import com.sparta.myboard.config.security.jwt.JwtAuthenticationFilter;
+import com.sparta.myboard.config.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +24,10 @@ import org.springframework.web.filter.CorsFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         //createDelegatingPasswordEncoder() 내부를 보면 결국 BCryptPasswordEncoder를 받게된다.
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
@@ -37,20 +40,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.cors()
-                .and()
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf().disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.cors().and()
+            .csrf().disable()
+            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .httpBasic().disable()
+            .formLogin().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // 와일드카드 사용법 (ant style)
         // https://developpaper.com/spring-security-ant-style-in-path-uri/
         http.authorizeRequests()
-                .antMatchers("/api/user/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/post/*").permitAll()
-                .anyRequest().authenticated();
+            .antMatchers("/api/user/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/post/*").permitAll()
+            .anyRequest().authenticated();
 
     }
 }

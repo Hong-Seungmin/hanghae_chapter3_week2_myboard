@@ -1,4 +1,4 @@
-package com.sparta.myboard.domain.util;
+package com.sparta.myboard.util;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Timestamped {
 
     @CreatedDate
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;
