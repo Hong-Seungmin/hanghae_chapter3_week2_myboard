@@ -1,8 +1,12 @@
 package com.sparta.myboard.config.security.jwt;
 
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
     public static final String JWT_HEADER_KEY_NAME = "Authorization";
@@ -17,6 +22,8 @@ public class JwtTokenProvider {
 
     // Jwt 토큰 유효시간
     private static final long JWT_EXPIRATION_MS = 1 * 60 * 1000L;
+
+    private final UserDetailsService userDetailsService;
 
 
     // jwt 토큰 생성
@@ -91,5 +98,10 @@ public class JwtTokenProvider {
             return null;
         }
         return JwtTokenProvider.getUsernameFromJWT(jwt);
+    }
+
+    public Authentication getAuthenticationFromUsername(String username) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null);
     }
 }
