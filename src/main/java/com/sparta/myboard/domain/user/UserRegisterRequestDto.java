@@ -16,11 +16,11 @@ import javax.validation.constraints.Size;
 public class UserRegisterRequestDto {
 
     @NotBlank(message = "아이디를 입력해주세요.")
-    @Pattern(regexp = "[a-zA-Z0-9]{3,20}", message = "최소 3자 이상, 알파벳 대소문자(a~z, A~Z), 숫자(0~9)")
+    @Pattern(regexp = "[a-zA-Z0-9]{3,20}", message = "아이디는 최소 3자 이상, 알파벳 대소문자(a~z, A~Z), 숫자(0~9)")
     private String username;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(min = 4, max = 20, message = "최소 4자 이상이며, 닉네임과 같은 값이 미포함")
+    @Size(min = 4, max = 20, message = "비밀번호는 최소 4자 이상이며, 닉네임과 같은 값이 미포함")
     private String password;
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String passwordCheck;
