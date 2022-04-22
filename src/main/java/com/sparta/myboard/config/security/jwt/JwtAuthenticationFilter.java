@@ -23,11 +23,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String jwt = JwtTokenProvider.getJwtFromRequest(request); //request에서 jwt 토큰을 꺼낸다.
+
+        // 로그보는 곳
+        String id = JwtTokenProvider.getUsernameFromJWT(jwt);
         log.info("=====Conntected IpAddress = {}", request.getHeader("X-FORWARDED-FOR"));
         log.info("=====Conntected IpAddress = {}", request.getRemoteAddr());
-        log.info("=====Request URL = {} {}", request.getRequestURI(), request.getQueryString());
+        log.info("=====Request URL = {} {} {}",request.getMethod(), request.getRequestURI(), request.getQueryString());
+        log.info("=====JWT = {}", jwt);
+        log.info("=====username = {}", id);
+        ///////
 
-        String jwt = JwtTokenProvider.getJwtFromRequest(request); //request에서 jwt 토큰을 꺼낸다.
         try {
             if (StringUtils.hasLength(jwt) && JwtTokenProvider.validateToken(jwt)) {
                 String username = JwtTokenProvider.getUsernameFromJWT(jwt); //jwt에서 사용자 id를 꺼낸다.

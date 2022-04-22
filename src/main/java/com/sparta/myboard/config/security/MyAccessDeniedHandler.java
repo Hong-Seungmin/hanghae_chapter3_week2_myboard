@@ -33,7 +33,7 @@ public class MyAccessDeniedHandler implements AccessDeniedHandler {
                              + request.getRequestURI());
         }
 
-        log.error(request.getRequestURI());
+        log.error("{} {} {}",request.getMethod(), request.getRequestURI(), request.getQueryString());
         //https://www.baeldung.com/spring-security-custom-authentication-failure-handler
 
         response.setStatus(HttpStatus.FORBIDDEN.value());
