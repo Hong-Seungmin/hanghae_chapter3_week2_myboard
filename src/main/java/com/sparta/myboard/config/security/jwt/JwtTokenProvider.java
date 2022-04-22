@@ -90,9 +90,9 @@ public class JwtTokenProvider {
     }
 
     public static String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME);
-        if (StringUtils.hasLength(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring("Bearer ".length());
+        String token = request.getHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME);
+        if (StringUtils.hasLength(token)) {
+            return token;
         }
         return null;
     }
