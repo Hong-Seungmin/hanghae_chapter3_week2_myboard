@@ -27,13 +27,13 @@ public class JwtTokenProvider {
 
 
     // jwt 토큰 생성
-    public static String generateToken(Authentication authentication) {
+    public static String generateToken(String username) {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_MS);
 
         return Jwts.builder()
-                   .setSubject((String) authentication.getPrincipal()) // 사용자
+                   .setSubject(username) // 사용자
                    .setIssuedAt(new Date()) // 현재 시간 기반으로 생성
                    .setExpiration(expiryDate) // 만료 시간 세팅
                    .signWith(SignatureAlgorithm.HS256, JWT_SECRET) // 사용할 암호화 알고리즘, signature에 들어갈 secret 값 세팅
@@ -42,14 +42,16 @@ public class JwtTokenProvider {
 
     // Jwt 토큰에서 아이디 추출
     public static String getUsernameFromJWT(String token) {
-        validateToken(token);
+        if (validateToken(token)) {
 
-        Claims claims = Jwts.parser()
-                            .setSigningKey(JWT_SECRET)
-                            .parseClaimsJws(token)
-                            .getBody();
+            Claims claims = Jwts.parser()
+                                .setSigningKey(JWT_SECRET)
+                                .parseClaimsJws(token)
+                                .getBody();
 
-        return claims.getSubject();
+            return claims.getSubject();
+        }
+        return null;
     }
 
     // Jwt 토큰 유효성 검사
@@ -78,6 +80,12 @@ public class JwtTokenProvider {
             msg = "JWT error";
         }
 
+        // 이걸 던지면 프론트단에서 처리를 해줘야한다.
+        // 이걸 안던지면.. 백단에서 처리를 해야한다.
+        // 내생각에는 이걸 던져서 프론트에서 방향을 유도하는게 맞다고 생각한다. (예, 예외를 먹으면. 토큰삭제, 메세지 출력 후 홈으로 이동한다던가?)
+        // 현재는 팀원과 통일을 위해 안던지기로 하였다.
+//        throw new JwtException("사용자 인증이 만료되었습니다.");
+
         return false;
     }
 
@@ -102,6 +110,7 @@ public class JwtTokenProvider {
 
     public Authentication getAuthenticationFromUsername(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, null);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),userDetails.getAuthorities());
     }
 }

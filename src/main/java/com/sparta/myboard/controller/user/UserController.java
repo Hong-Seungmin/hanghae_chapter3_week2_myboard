@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,9 +78,7 @@ public class UserController {
         String password = userLoginRequestDto.getPassword();
         userService.login(username, password);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userLoginRequestDto.getUsername(),
-                                                                                null);
-        jwt = JwtTokenProvider.generateToken(authentication);
+        jwt = JwtTokenProvider.generateToken(username);
         response.setHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME, jwt);
 
         return new ResponseEntity<>(new ResponseMessage(true, "로그인 성공"), HttpStatus.OK);

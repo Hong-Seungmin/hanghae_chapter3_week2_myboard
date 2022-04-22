@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +29,11 @@ public class PostController {
     @GetMapping("")
     public ResponseEntity<List<PostResponseDto>> getAllPost(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            HttpServletRequest request) {
+            HttpServletRequest request, @AuthenticationPrincipal UserDetails user) {
 
         //TODO 모든포스트 조회 (페이징)
 
+        log.info(user != null ? user.getUsername() : "비 로그인 사용자");
         String username = JwtTokenProvider.getUsernameFromRequest(request);
 
         List<PostResponseDto> allPost = postService.getAllPost(page, username);

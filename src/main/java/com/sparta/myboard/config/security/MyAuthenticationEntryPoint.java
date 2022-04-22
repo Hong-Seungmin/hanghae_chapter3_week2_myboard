@@ -23,6 +23,7 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException) throws IOException, ServletException {
 
         log.error(request.getRequestURI());
+        log.error(authException.getMessage());
 
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtTokenProvider.getAuthenticationFromUsername(username);
 //                Authentication authentication = new UsernamePasswordAuthenticationToken(username, "", null); //id를 인증한다.
 
+                log.info("authentication = " + authentication.getCredentials());
                 //세션에서 계속 사용하기 위해 securityContext에 Authentication 등록
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 

@@ -23,6 +23,7 @@ public class UserService {
         isDuplicationUsername(username);
 
         User newUser = new User(username, passwordEncoder.encode(password), nickname);
+        newUser.addRole("ROLE_USER");
         userRepository.save(newUser);
     }
 
