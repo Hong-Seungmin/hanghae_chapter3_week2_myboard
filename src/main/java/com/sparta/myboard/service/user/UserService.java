@@ -33,11 +33,11 @@ public class UserService {
         User user = userRepository.findOneByUsername(username)
                                   .orElseThrow(() ->
                                                        new ResponseException(
-                                                               HttpStatus.UNAUTHORIZED,
+                                                               HttpStatus.BAD_REQUEST,
                                                                "로그인할 수 없는 아이디입니다."));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new ResponseException(HttpStatus.UNAUTHORIZED, "로그인할 수 없는 비밀번호입니다.");
+            throw new ResponseException(HttpStatus.BAD_REQUEST, "로그인할 수 없는 비밀번호입니다.");
         }
 
         user.updateLoginTime();
