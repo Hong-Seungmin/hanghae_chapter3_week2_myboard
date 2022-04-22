@@ -16,5 +16,7 @@ public class PostRequsetDto {
     @NotBlank(message = "내용을 적어주세요.")
     private String contents;
 
+    private String layout;
+
     private String imagePath;
 }

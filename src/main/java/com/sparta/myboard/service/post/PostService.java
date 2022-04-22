@@ -72,6 +72,7 @@ public class PostService {
 
         PostDto postDto = PostDto.builder()
                                  .contents(postRequsetDto.getContents())
+                                 .layout(postRequsetDto.getLayout())
                                  .imagePath(postRequsetDto.getImagePath())
                                  .build();
         Post post = user.addPost(postDto);
@@ -88,8 +89,9 @@ public class PostService {
         String writerUsername = post.getUser().getUsername();
         if (writerUsername.equals(username)) {
             post.updateContents(postRequsetDto.getContents());
+            post.updateLayout(postRequsetDto.getLayout());
             post.updateImagePath(postRequsetDto.getImagePath());
-        }else{
+        } else {
             throw new ResponseException(HttpStatus.UNAUTHORIZED, "편집할 수 없는 포스트입니다.");
         }
     }
@@ -103,7 +105,7 @@ public class PostService {
         String writerUsername = post.getUser().getUsername();
         if (writerUsername.equals(username)) {
             postRepository.deleteOneById(postId);
-        }else{
+        } else {
             throw new ResponseException(HttpStatus.UNAUTHORIZED, "삭제할 수 없는 포스트입니다.");
         }
     }

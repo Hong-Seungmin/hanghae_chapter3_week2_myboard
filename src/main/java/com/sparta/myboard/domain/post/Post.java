@@ -21,10 +21,13 @@ public class Post extends Timestamped {
     @Column(name = "PostId")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
 
-    @Column
+    @Column(nullable = false)
+    private String layout;
+
+    @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
     private String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,6 +52,7 @@ public class Post extends Timestamped {
     public Post(PostDto postDto) {
         this.id = postDto.getId();
         this.contents = postDto.getContents();
+        this.layout = postDto.getLayout();
         this.imagePath = postDto.getImagePath();
         this.user = postDto.getUser();
         this.likeList = postDto.getLikeList();
@@ -58,10 +62,13 @@ public class Post extends Timestamped {
         this.contents = contents;
     }
 
+    public void updateLayout(String layout) {
+        this.layout = layout;
+    }
+
     public void updateImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
-
     public void addLike(Likes likes) {
         likeList.add(likes);
     }

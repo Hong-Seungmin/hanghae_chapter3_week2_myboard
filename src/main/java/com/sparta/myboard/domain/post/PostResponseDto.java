@@ -18,6 +18,7 @@ public class PostResponseDto {
     private Long likeCount;
 
     private String contents;
+    private String layout;
     private String imagePath;
     private String nickname;
 
@@ -34,6 +35,7 @@ public class PostResponseDto {
         this.postId = post.getId();
         this.imagePath = post.getImagePath();
         this.contents = post.getContents();
+        this.layout = post.getLayout();
         this.nickname = post.getUser().getNickname();
         this.likeCount = (long) post.getLikeList().size();
         this.createdAt = post.getCreatedAt();

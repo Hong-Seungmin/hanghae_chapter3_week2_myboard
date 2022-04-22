@@ -17,6 +17,7 @@ public class PostDto {
 
     private Long id;
     private String contents;
+    private String layout;
     private String imagePath;
     private User user;
     private List<Likes> likeList;
