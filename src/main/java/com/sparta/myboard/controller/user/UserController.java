@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -91,6 +93,8 @@ public class UserController {
         String jwt = JwtTokenProvider.getUsernameFromJWT(request.getHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME));
 
         SecurityContextHolder.clearContext();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         // jwt를 이용한 로그아웃은 토근을 따로 저장해두었다가 삭제하는 식으로 구현해야한다.
         // 저장소에 토큰이있다면 로그인 중, 토큰이 없다면 로그아웃 상태라고 보면된다.
 
@@ -98,11 +102,16 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<UserInfoResponseDto> info(@RequestParam(value = "username") String username) {
+    public ResponseEntity<UserInfoResponseDto> info(@RequestParam(value = "username", required = false) String username,
+            @AuthenticationPrincipal UserDetails user) {
 
         //TODO 회원 정보 조회
+        if (user == null) {
+            throw new ResponseException(HttpStatus.BAD_REQUEST, "로그인 후 이용해주세요.");
+        }
+        String username1 = user.getUsername();
 
-        UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(username);
+        UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(username1);
 
         return new ResponseEntity<>(userInfoResponseDto, HttpStatus.OK);
     }

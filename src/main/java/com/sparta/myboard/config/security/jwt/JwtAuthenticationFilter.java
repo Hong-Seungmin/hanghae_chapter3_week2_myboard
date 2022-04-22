@@ -23,6 +23,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        log.info("=====Conntected IpAddress = {}", request.getHeader("X-FORWARDED-FOR"));
+        log.info("=====Conntected IpAddress = {}", request.getRemoteAddr());
+        log.info("=====Request URL = {} {}", request.getRequestURI(), request.getQueryString());
 
         String jwt = JwtTokenProvider.getJwtFromRequest(request); //request에서 jwt 토큰을 꺼낸다.
         try {
