@@ -22,7 +22,7 @@ public class Likes extends Timestamped {
     @JoinColumn(name = "username")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PostId")
     private Post post;
 
