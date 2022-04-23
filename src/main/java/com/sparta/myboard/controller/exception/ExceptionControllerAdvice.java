@@ -6,6 +6,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -27,6 +28,11 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(body, e.getHttpStatus());
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseMessage> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException e) {
+        log.warn(e.getMessage());
+        return new ResponseEntity<>(new ResponseMessage(false, e.getBindingResult().getAllErrors().get(0).getDefaultMessage()), HttpStatus.BAD_REQUEST);
+    }
 
 
     @ExceptionHandler(Exception.class)
