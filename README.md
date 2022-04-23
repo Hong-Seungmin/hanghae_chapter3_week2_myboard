@@ -80,3 +80,21 @@
 
 ![img.png](image/API_list.png)
 
+
+---
+# Lv3. 테스트
+
+- [테스트전략](https://www.popit.kr/spring-guide-%ED%85%8C%EC%8A%A4%ED%8C%85-%EC%A0%84%EB%9E%B5/)
+- [유닛테스트](https://galid1.tistory.com/772)
+- [통합테스트](https://galid1.tistory.com/735)
+
+
+## - 과제 내용
+
+- Unit test와 Integration test는 무엇이고, 어떻게 하는지 알아보기
+- Integration test 시나리오 작성하기
+    - 개발자의 관점이 아닌 고객 관점에서 작성해보세요!
+- 서비스 레이어 테스트 코드 커버율 70% 이상 만들어오기
+
+### - [4월23일 작업](개발일기/8일차.md)
+
