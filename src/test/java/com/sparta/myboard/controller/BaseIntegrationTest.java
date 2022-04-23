@@ -1,4 +1,4 @@
-package com.sparta.myboard;
+package com.sparta.myboard.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
