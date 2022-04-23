@@ -1,7 +1,7 @@
 package com.sparta.myboard.service.post;
 
 import com.sparta.myboard.domain.post.Post;
-import com.sparta.myboard.domain.post.PostRequsetDto;
+import com.sparta.myboard.domain.post.PostRequestDto;
 import com.sparta.myboard.domain.post.PostResponseDto;
 import com.sparta.myboard.domain.user.User;
 import com.sparta.myboard.exception.ResponseException;
@@ -43,14 +43,14 @@ public class PostServiceTest {
     @Test
     public void 포스트_저장() throws Exception {
         //given
-        PostRequsetDto postRequsetDto = new PostRequsetDto("hahahoho", "layout", "imagePath");
+        PostRequestDto postRequestDto = new PostRequestDto("hahahoho", "layout", "imagePath");
         String username = "username";
         User user = new User();
 
         given(userRepository.findOneByUsername(any())).willReturn(Optional.of(user));
 
         //when
-        postService.savePost(postRequsetDto, username);
+        postService.savePost(postRequestDto, username);
 
         //then
         assertEquals(user.getPostList().get(0).getContents(), "hahahoho");
@@ -96,7 +96,7 @@ public class PostServiceTest {
     @Test
     public void 포스트_수정() throws Exception {
         //given
-        PostRequsetDto postRequsetDto = new PostRequsetDto("contents", "layout", "imagePath");
+        PostRequestDto postRequestDto = new PostRequestDto("contents", "layout", "imagePath");
         Long postId = 1L;
         String username = "username";
         String writerUsername = "username";
@@ -109,21 +109,21 @@ public class PostServiceTest {
 
         //when
         try {
-            postService.updatePost(postRequsetDto, postId, username);
+            postService.updatePost(postRequestDto, postId, username);
         } catch (Exception e) {
             fail();
         }
 
         //then
-        assertEquals(postRequsetDto.getContents(), post.getContents());
-        assertEquals(postRequsetDto.getImagePath(), post.getImagePath());
-        assertEquals(postRequsetDto.getLayout(),post.getLayout());
+        assertEquals(postRequestDto.getContents(), post.getContents());
+        assertEquals(postRequestDto.getImagePath(), post.getImagePath());
+        assertEquals(postRequestDto.getLayout(), post.getLayout());
     }
 
     @Test
     public void 포스트_수정_실패_다른사람_아이디_사칭() throws Exception {
         //given
-        PostRequsetDto postRequsetDto = new PostRequsetDto("contents", "layout", "imagePath");
+        PostRequestDto postRequestDto = new PostRequestDto("contents", "layout", "imagePath");
         Long postId = 1L;
         String username = "username";
         String writerUsername = "realUser";
@@ -136,7 +136,7 @@ public class PostServiceTest {
 
         //when
         try {
-            postService.updatePost(postRequsetDto, postId, username);
+            postService.updatePost(postRequestDto, postId, username);
 
             fail();
         } catch (Exception e) {
@@ -144,9 +144,9 @@ public class PostServiceTest {
         }
 
         //then
-        assertNotEquals(postRequsetDto.getContents(), post.getContents());
-        assertNotEquals(postRequsetDto.getImagePath(), post.getImagePath());
-        assertNotEquals(postRequsetDto.getLayout(),post.getLayout());
+        assertNotEquals(postRequestDto.getContents(), post.getContents());
+        assertNotEquals(postRequestDto.getImagePath(), post.getImagePath());
+        assertNotEquals(postRequestDto.getLayout(), post.getLayout());
     }
 
     @Test

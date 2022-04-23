@@ -37,7 +37,7 @@ public class PostResponseDto {
         this.contents = post.getContents();
         this.layout = post.getLayout();
         this.nickname = post.getUser().getNickname();
-        this.likeCount = (long) post.getLikeList().size();
+        this.likeCount = (long) (post.getLikeList() == null ? 0 : post.getLikeList().size());
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.liked = liked;

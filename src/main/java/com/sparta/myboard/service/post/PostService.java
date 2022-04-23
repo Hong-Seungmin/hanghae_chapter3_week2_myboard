@@ -2,7 +2,7 @@ package com.sparta.myboard.service.post;
 
 import com.sparta.myboard.domain.post.Post;
 import com.sparta.myboard.domain.post.PostDto;
-import com.sparta.myboard.domain.post.PostRequsetDto;
+import com.sparta.myboard.domain.post.PostRequestDto;
 import com.sparta.myboard.domain.post.PostResponseDto;
 import com.sparta.myboard.domain.user.User;
 import com.sparta.myboard.exception.ResponseException;
@@ -63,7 +63,7 @@ public class PostService {
     }
 
     @Transactional
-    public void savePost(PostRequsetDto postRequsetDto, String username) {
+    public void savePost(PostRequestDto postRequestDto, String username) {
 
         User user = userRepository.findOneByUsername(username)
                                   .orElseThrow(() ->
@@ -71,16 +71,16 @@ public class PostService {
                                                                              "등록되지 않은 아이디입니다."));
 
         PostDto postDto = PostDto.builder()
-                                 .contents(postRequsetDto.getContents())
-                                 .layout(postRequsetDto.getLayout())
-                                 .imagePath(postRequsetDto.getImagePath())
+                                 .contents(postRequestDto.getContents())
+                                 .layout(postRequestDto.getLayout())
+                                 .imagePath(postRequestDto.getImagePath())
                                  .build();
         Post post = user.addPost(postDto);
         postRepository.save(post);
     }
 
     @Transactional
-    public void updatePost(PostRequsetDto postRequsetDto, Long postId, String username) {
+    public void updatePost(PostRequestDto postRequestDto, Long postId, String username) {
 
         Post post = postRepository.findOneById(postId)
                                   .orElseThrow(
@@ -88,9 +88,9 @@ public class PostService {
 
         String writerUsername = post.getUser().getUsername();
         if (writerUsername.equals(username)) {
-            post.updateContents(postRequsetDto.getContents());
-            post.updateLayout(postRequsetDto.getLayout());
-            post.updateImagePath(postRequsetDto.getImagePath());
+            post.updateContents(postRequestDto.getContents());
+            post.updateLayout(postRequestDto.getLayout());
+            post.updateImagePath(postRequestDto.getImagePath());
         } else {
             throw new ResponseException(HttpStatus.UNAUTHORIZED, "편집할 수 없는 포스트입니다.");
         }

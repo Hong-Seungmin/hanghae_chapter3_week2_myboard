@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostRequsetDto {
+public class PostRequestDto {
 
     @NotBlank(message = "내용을 적어주세요.")
     private String contents;

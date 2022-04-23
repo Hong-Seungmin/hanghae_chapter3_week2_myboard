@@ -2,7 +2,7 @@ package com.sparta.myboard.controller.post;
 
 import com.sparta.myboard.config.security.jwt.JwtTokenProvider;
 import com.sparta.myboard.domain.common.ResponseMessage;
-import com.sparta.myboard.domain.post.PostRequsetDto;
+import com.sparta.myboard.domain.post.PostRequestDto;
 import com.sparta.myboard.domain.post.PostResponseDto;
 import com.sparta.myboard.exception.ResponseException;
 import com.sparta.myboard.service.post.PostService;
@@ -54,7 +54,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> savePost(@RequestBody @Valid PostRequsetDto postRequsetDto,
+    public ResponseEntity<ResponseMessage> savePost(@RequestBody @Valid PostRequestDto postRequestDto,
             HttpServletRequest request) {
 
         //TODO 포스트 등록
@@ -64,12 +64,12 @@ public class PostController {
             throw new ResponseException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
         }
 
-        postService.savePost(postRequsetDto, username);
+        postService.savePost(postRequestDto, username);
         return new ResponseEntity<>(new ResponseMessage(true, "포스트 기록 성공"), HttpStatus.OK);
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<ResponseMessage> updatePost(@RequestBody @Valid PostRequsetDto postRequsetDto,
+    public ResponseEntity<ResponseMessage> updatePost(@RequestBody @Valid PostRequestDto postRequestDto,
             HttpServletRequest request, @PathVariable Long postId) {
 
         //TODO 포스트 수정
@@ -79,7 +79,7 @@ public class PostController {
             throw new ResponseException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
         }
 
-        postService.updatePost(postRequsetDto, postId, username);
+        postService.updatePost(postRequestDto, postId, username);
 
         return new ResponseEntity<>(new ResponseMessage(true, "포스트 수정 성공"), HttpStatus.OK);
     }
