@@ -70,6 +70,7 @@ public class Post extends Timestamped {
         this.imagePath = imagePath;
     }
     public void addLike(Likes likes) {
+        if (likeList == null) likeList = new ArrayList<>();
         likeList.add(likes);
     }
 
