@@ -195,13 +195,13 @@ public class UserControllerTest extends BaseIntegrationTest {
 
 
     //TODO 이건 한번 조사해봐야함 로그아웃 기능자체가 없음
-    @Nested
-    @DisplayName("로그아웃")
-    class logout {
-
-        @Test
-        public void 성공_로그아웃_클릭() throws Exception {
-
+//    @Nested
+//    @DisplayName("로그아웃")
+//    class logout {
+//
+//        @Test
+//        public void 성공_로그아웃_클릭() throws Exception {
+//
 //            //given
 //            String token = JwtTokenProvider.generateToken(username);
 //
@@ -216,48 +216,48 @@ public class UserControllerTest extends BaseIntegrationTest {
 //            resultActions.andExpect(status().isOk())
 //                         .andExpect(jsonPath("$.msg").value("로그아웃 성공"));
 //            assertFalse(SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
-
-        }
-
-        @Test
-        public void 실패_토큰인증_오류() throws Exception {
-            //given
-//            String token = JwtTokenProvider.generateToken(username);
-            String token = "asdasdasdd";
-
-            //when
-            ResultActions resultActions = mvc.perform(post("/api/user/logout")
-                                                              .header(HttpHeaders.AUTHORIZATION, token)
-                                                              .accept("*/*"));
-
-
-            //then
-            resultActions.andExpect(status().isBadRequest())
-                         .andExpect(jsonPath("$.msg").value("이미 로그인 중.."));
-
-        }
-    }
-
-    @Nested
-    @DisplayName("회원정보 조회")
-    class info {
-
-        @Test
-        public void 성공_인증_사용자_요청() throws Exception {
-            //given
-
-            //when
-
-            //then
-        }
-
-        @Test
-        public void 실패_미인증_사용자_요청() throws Exception {
-            //given
-
-            //when
-
-            //then
-        }
-    }
+//
+//        }
+//
+//        @Test
+//        public void 실패_토큰인증_오류() throws Exception {
+//            //given
+////            String token = JwtTokenProvider.generateToken(username);
+//            String token = "asdasdasdd";
+//
+//            //when
+//            ResultActions resultActions = mvc.perform(post("/api/user/logout")
+//                                                              .header(HttpHeaders.AUTHORIZATION, token)
+//                                                              .accept("*/*"));
+//
+//
+//            //then
+//            resultActions.andExpect(status().isBadRequest())
+//                         .andExpect(jsonPath("$.msg").value("이미 로그인 중.."));
+//
+//        }
+//    }
+//
+//    @Nested
+//    @DisplayName("회원정보 조회")
+//    class info {
+//
+//        @Test
+//        public void 성공_인증_사용자_요청() throws Exception {
+//            //given
+//
+//            //when
+//
+//            //then
+//        }
+//
+//        @Test
+//        public void 실패_미인증_사용자_요청() throws Exception {
+//            //given
+//
+//            //when
+//
+//            //then
+//        }
+//    }
 }
