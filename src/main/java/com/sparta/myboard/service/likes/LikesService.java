@@ -23,15 +23,15 @@ public class LikesService {
     @Transactional
     public boolean updateLikes(String username, Long postId) {
 
+        User user = getUser(username);
+        Post post = getPost(postId);
+
         if (likesRepository.existsOneByUser_UsernameAndPost_Id(username, postId)) {
 
             likesRepository.deleteOneByUser_UsernameAndPost_Id(username, postId);
 
             return false;
         } else {
-
-            User user = getUser(username);
-            Post post = getPost(postId);
 
             Likes likes = new Likes(user, post);
             likesRepository.save(likes);
@@ -43,6 +43,7 @@ public class LikesService {
     }
 
     private User getUser(String username) {
+        //TODO 디비에서 가져올것이 아니라 인증체에서 뽑아낸 후 확인해야한다.
         return userRepository.findOneByUsername(username)
                              .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "인증되지 않은 아이디로 시도하였습니다."));
 
