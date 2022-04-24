@@ -9,6 +9,7 @@ import com.sparta.myboard.exception.ResponseException;
 import com.sparta.myboard.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -81,13 +83,17 @@ public class UserController {
         userService.login(username, password);
 
         jwt = JwtTokenProvider.generateToken(username);
-        response.setHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME, jwt);
+//        response.setHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME, jwt);
+        //쿠키에 jwt 저장
+        Cookie cookie = new Cookie(JwtTokenProvider.JWT_HEADER_KEY_NAME, jwt);
+        cookie.setPath("/");
+        response.addCookie(cookie);
 
         return new ResponseEntity<>(new ResponseMessage(true, "로그인 성공"), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseMessage> logout(HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> logout(HttpServletRequest request, HttpServletResponse response) {
 
         //TODO 로그아웃 , 일단 보류
         String jwt = JwtTokenProvider.getUsernameFromJWT(request.getHeader(JwtTokenProvider.JWT_HEADER_KEY_NAME));
@@ -97,6 +103,12 @@ public class UserController {
 
         // jwt를 이용한 로그아웃은 토근을 따로 저장해두었다가 삭제하는 식으로 구현해야한다.
         // 저장소에 토큰이있다면 로그인 중, 토큰이 없다면 로그아웃 상태라고 보면된다.
+
+        // 쿠키에서 jwt 삭제
+        Cookie cookie = new Cookie(HttpHeaders.AUTHORIZATION, null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
 
         return new ResponseEntity<>(new ResponseMessage(true, "로그아웃 성공"), HttpStatus.OK);
     }

@@ -3,6 +3,7 @@ package com.sparta.myboard.config.security.jwt;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,14 +11,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
-    public static final String JWT_HEADER_KEY_NAME = "Authorization";
+    public static final String JWT_HEADER_KEY_NAME = HttpHeaders.AUTHORIZATION;
     private static final String JWT_SECRET = "secretKey";
 
     // Jwt 토큰 유효시간
@@ -111,6 +115,18 @@ public class JwtTokenProvider {
     public Authentication getAuthenticationFromUsername(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+                                                       userDetails.getAuthorities());
+    }
+
+    public static String getJwtFromCookiesInRequest(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            Cookie cookie = Arrays.stream(cookies)
+                                  .filter(coo -> coo.getName().equals(JWT_HEADER_KEY_NAME))
+                                  .collect(Collectors.toList()).get(0);
+            return cookie.getValue();
+        } else
+            return null;
     }
 }

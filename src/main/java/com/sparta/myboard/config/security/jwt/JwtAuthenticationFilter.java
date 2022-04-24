@@ -23,7 +23,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String jwt = JwtTokenProvider.getJwtFromRequest(request); //request에서 jwt 토큰을 꺼낸다.
+//        String jwt = JwtTokenProvider.getJwtFromRequest(request); //request의 헤더에서 jwt를 꺼낸다.
+        String jwt = JwtTokenProvider.getJwtFromCookiesInRequest(request); // request의 쿠키에서 jwt를 꺼낸다.
 
         // 로그보는 곳
         String id = JwtTokenProvider.getUsernameFromJWT(jwt);
