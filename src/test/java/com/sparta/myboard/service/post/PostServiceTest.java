@@ -101,7 +101,11 @@ public class PostServiceTest {
         String username = "username";
         String writerUsername = "username";
 
-        Post post = new Post("zzzz", "ggggg");
+//        Post post = new Post("zzzz", "ggggg");
+        Post post = Post.builder()
+                        .contents("zzzz")
+                        .imagePath("ggggg")
+                        .build();
         post.updateLayout("nanun layout");
         post.setUser(new User(writerUsername, null, null));
 
@@ -128,7 +132,11 @@ public class PostServiceTest {
         String username = "username";
         String writerUsername = "realUser";
 
-        Post post = new Post("zzzz", "ggggg");
+//        Post post = new Post("zzzz", "ggggg");
+        Post post = Post.builder()
+                        .contents("zzzz")
+                        .imagePath("ggggg")
+                        .build();
         post.updateLayout("nanun layout");
         post.setUser(new User(writerUsername, null, null));
 

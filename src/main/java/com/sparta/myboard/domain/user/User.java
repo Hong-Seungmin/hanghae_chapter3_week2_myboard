@@ -58,7 +58,15 @@ public class User implements UserDetails {
     }
 
     public Post addPost(PostDto postDto) {
-        Post post = new Post(postDto);
+//        Post post = new Post(postDto);
+        Post post = Post.builder()
+                        .id(postDto.getId())
+                        .contents(postDto.getContents())
+                        .layout(postDto.getLayout())
+                        .imagePath(postDto.getImagePath())
+                        .user(postDto.getUser())
+                        .likeList(postDto.getLikeList())
+                        .build();
         postList.add(post);
         post.setUser(this);
 
@@ -66,7 +74,15 @@ public class User implements UserDetails {
     }
 
     public Post removePost(PostDto postDto) {
-        Post post = new Post(postDto);
+//        Post post = new Post(postDto);
+        Post post = Post.builder()
+                        .id(postDto.getId())
+                        .contents(postDto.getContents())
+                        .layout(postDto.getLayout())
+                        .imagePath(postDto.getImagePath())
+                        .user(postDto.getUser())
+                        .likeList(postDto.getLikeList())
+                        .build();
         postList.remove(post);
         post.setUser(null);
 
@@ -100,7 +116,7 @@ public class User implements UserDetails {
                     .collect(Collectors.toList());
     }
 
-    public void updateLoginTime(){
+    public void updateLoginTime() {
         loginTime = LocalDateTime.now();
     }
 

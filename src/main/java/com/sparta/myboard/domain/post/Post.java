@@ -58,6 +58,15 @@ public class Post extends Timestamped {
         this.likeList = postDto.getLikeList();
     }
 
+    private Post(Builder builder) {
+        this.id = builder.id;
+        this.contents = builder.contents;
+        this.layout = builder.layout;
+        this.imagePath = builder.imagePath;
+        this.user = builder.user;
+        this.likeList = builder.likeList;
+    }
+
     public void updateContents(String contents){
         this.contents = contents;
     }
@@ -80,5 +89,57 @@ public class Post extends Timestamped {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private String contents;
+        private String layout;
+        private String imagePath;
+        private User user;
+        private List<Likes> likeList;
+
+        private Builder(){
+
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder contents(String contents) {
+            this.contents = contents;
+            return this;
+        }
+
+        public Builder layout(String layout) {
+            this.layout = layout;
+            return this;
+        }
+
+        public Builder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder likeList(List<Likes> likeList) {
+            this.likeList = likeList;
+            return this;
+        }
+
+        public Post build(){
+            return new Post(this);
+        }
     }
 }
