@@ -11,7 +11,6 @@ import com.sparta.myboard.repository.PostRepository;
 import com.sparta.myboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,7 +33,8 @@ public class PostService {
     public List<PostResponseDto> getAllPost(int page, String username) {
 
         Pageable pageRequest = PageRequest.of(page, 10, Sort.by("createdAt").descending());
-        Page<Post> posts = postRepository.findAll(pageRequest);
+//        Page<Post> posts = postRepository.findAll(pageRequest);
+        List<Post> posts = postRepository.findAllSortedLike(pageRequest);
 
         List<PostResponseDto> responseDtos = new ArrayList<>();
         posts.forEach((post) -> {
